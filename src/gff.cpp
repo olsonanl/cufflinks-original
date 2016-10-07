@@ -1137,7 +1137,8 @@ void GffReader::readAll(bool keepAttr, bool mergeCloseExons, bool noExonAttr) {
 						//overlapping with same ID not allowed
 						GMessage("GFF Error: duplicate/invalid '%s' feature ID=%s\n", gffline->ftype, gffline->ID);
 						//validation_errors = true;
-						if (gff_warns) {
+						bool skip = true;
+						if (gff_warns || skip) {
 							delete gffline;
 							gffline=NULL;
 							continue;
