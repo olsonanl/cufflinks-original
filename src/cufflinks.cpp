@@ -917,13 +917,16 @@ bool scaffolds_for_bundle(const HitBundle& bundle,
 #if ENABLE_THREADS
 boost::mutex out_file_lock;
 boost::mutex thread_pool_lock;
+boost::condition_variable thread_pool_cond;
 int curr_threads = 0;
 
 void decr_pool_count()
 {
-	thread_pool_lock.lock();
+    {
+	boost::lock_guard<boost::mutex> lock(thread_pool_lock);
 	curr_threads--;
-	thread_pool_lock.unlock();	
+    }
+    thread_pool_cond.notify_all();
 }
 #endif
 
@@ -1497,27 +1500,22 @@ bool assemble_hits(BundleFactory& bundle_factory, boost::shared_ptr<BiasLearner>
 
 		BundleStats stats;
 #if ENABLE_THREADS			
-		while(1)
 		{
-			thread_pool_lock.lock();
-			if (curr_threads < num_threads)
-			{
-				thread_pool_lock.unlock();
-				break;
-			}
+		    boost::unique_lock<boost::mutex> lock(thread_pool_lock);
 
-			thread_pool_lock.unlock();
-			
-			boost::this_thread::sleep(boost::posix_time::milliseconds(5));
-			
+		    while (curr_threads >= num_threads)
+		    {
+			thread_pool_cond.wait(lock);
+		    }
 		}
 #endif
 		p_bar.update(bundle_label_buf, bundle.raw_mass());	
 
-#if ENABLE_THREADS			
-		thread_pool_lock.lock();
-		curr_threads++;
-		thread_pool_lock.unlock();
+#if ENABLE_THREADS
+		{
+		    boost::unique_lock<boost::mutex> lock(thread_pool_lock);
+		    curr_threads++;
+		}
 		
 		thread asmbl(assemble_bundle,
 					 boost::cref(rt), 
@@ -1541,20 +1539,14 @@ bool assemble_hits(BundleFactory& bundle_factory, boost::shared_ptr<BiasLearner>
 		
 	}
 
-#if ENABLE_THREADS	
-	while(1)
+#if ENABLE_THREADS
 	{
-		thread_pool_lock.lock();
-		if (curr_threads == 0)
-		{
-			thread_pool_lock.unlock();
-			break;
-		}
+	    boost::unique_lock<boost::mutex> lock(thread_pool_lock);
+	    while (curr_threads != 0)
+	    {
 		p_bar.remaining(curr_threads);
-		
-		thread_pool_lock.unlock();
-		//fprintf(stderr, "waiting to exit\n");
-		boost::this_thread::sleep(boost::posix_time::milliseconds(5));
+		thread_pool_cond.wait(lock);
+	    }
 	}
 #endif
 	
