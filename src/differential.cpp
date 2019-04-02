@@ -908,7 +908,8 @@ void sample_worker(bool non_empty,
         // are done, and if so, perform the cross sample testing.
         launcher->abundance_avail(locus_tag, abundance, factory_id);
         vector<vector<boost::shared_ptr<SampleAbundances> > > to_be_tested = launcher->test_finished_loci();
-        launcher->perform_testing(to_be_tested);
+	for (size_t i = 0; i < to_be_tested.size(); ++i)
+	    launcher->perform_testing(to_be_tested[i]);
         //launcher();
 #endif
     	return;
