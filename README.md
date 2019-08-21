@@ -19,7 +19,7 @@ Cufflinks is provided under the OSI-approved [Boost License](http://en.wikipedia
 
 ## Installing a pre-compiled binary release
 
-In order to make it easy to install Cufflinks, we provide a few binary packages to save users from occasionally frustrating process of building Cufflinks, which requires that you install the Boost libraries. To use the binary packages, simply download the appropriate one for your machine, untar it, and make sure the cufflinks,cuffdiff and cuffcompare binaries are in a directory in your PATH environment variable.
+In order to make it easy to install Cufflinks, we provide a few binary packages [here](http://cole-trapnell-lab.github.io/cufflinks/install/) to save users from the occasionally frustrating process of building Cufflinks, which requires that you install the Boost libraries. To use the binary packages, simply download the appropriate one for your machine, untar it, and make sure the cufflinks,cuffdiff and cuffcompare binaries are in a directory in your PATH environment variable.
 
 # Building Cufflinks from source
 
@@ -66,7 +66,7 @@ bjam --prefix=<YOUR_BOOST_INSTALL_DIRECTORY> --toolset=gcc architecture=x86 addr
 
 ## Building Cufflinks
 
-###If you are starting from a source tarball downloaded from [here](http://cole-trapnell-lab.github.io/cufflinks/install/):
+### If you are starting from a source tarball downloaded from [here](http://cole-trapnell-lab.github.io/cufflinks/install/):
 
 Unpack the Cufflinks source tarball (in this example for version 2.2.1):
 ```bash
@@ -79,7 +79,7 @@ cd cufflinks-2.2.1
 
 ### If you want to clone the Cufflinks github repo:
 ```bash
-git clone git@github.com:cole-trapnell-lab/cufflinks.git
+git clone https://github.com/cole-trapnell-lab/cufflinks.git
 cd cufflinks
 autoreconf --install
 ```

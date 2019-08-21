@@ -2,7 +2,9 @@ m4_include([ax_boost_base.m4])
 m4_include([ax_boost_thread.m4])
 m4_include([ax_boost_system.m4])
 m4_include([ax_boost_serialization.m4])
+m4_include([ax_boost_filesystem.m4])
 m4_include([ax_bam.m4])
+m4_include([ax_check_eigen.m4])
 m4_include([ax_check_zlib.m4])
 
 define([svnversion], esyscmd([sh -c "svnversion|tr -d '\n'"]))dnl
@@ -37,6 +39,7 @@ AX_BOOST_BASE([1.47.0])
 AX_BAM
 AX_BOOST_SYSTEM
 AX_BOOST_SERIALIZATION
+AX_BOOST_FILESYSTEM
 AX_BOOST_THREAD
 AX_CHECK_ZLIB()
 
@@ -108,8 +111,8 @@ AC_ARG_ENABLE(profiling,      [  --enable-profiling        enable profiling with
 	  [ext_LDFLAGS="-lprofiler -ltcmalloc"], [])
 	  
 CFLAGS="${generic_CFLAGS} ${ext_CFLAGS} ${user_CFLAGS} ${debug_CFLAGS} ${OPENMP_CFLAGS}"
-CXXFLAGS="$CFLAGS"
-CXXFLAGS="${CXXFLAGS} ${BOOST_CPPFLAGS} ${BAM_CPPFLAGS} ${EIGEN3_CPPFLAGS}"
+CXXFLAGS="$CFLAGS -std=c++03"
+CXXFLAGS="${CXXFLAGS} ${BOOST_CPPFLAGS} ${BAM_CPPFLAGS} ${EIGEN_CPPFLAGS}"
 user_LDFLAGS="$LDFLAGS"
 LDFLAGS="${ext_LDFLAGS} ${user_LDFLAGS}"
 
