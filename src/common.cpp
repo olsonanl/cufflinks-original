@@ -264,7 +264,7 @@ int mkpath(const char *s, mode_t mode)
     namespace bs = boost::system;
 
     // These fail with an Invalid Argument and are meaningless anyway.
-    if (s == "." || s == "./")
+    if (strcmp(s, ".") == 0 || strcmp(s, "./") == 0)
 	return 0;
 
     // First try create the directory
