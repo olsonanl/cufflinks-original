@@ -263,6 +263,10 @@ int mkpath(const char *s, mode_t mode)
     namespace fs = boost::filesystem;
     namespace bs = boost::system;
 
+    // These fail with an Invalid Argument and are meaningless anyway.
+    if (s == "." || s == "./")
+	return 0;
+
     // First try create the directory
     try {
         fs::create_directories(s);
